@@ -54,7 +54,7 @@
         scene.add(directionalLight);
 
         // Create a custom shader material with a gradient animation for the bear's body
-        const gradientMaterial = new THREE.ShaderMaterial({
+        const bigHeartMaterial = new THREE.ShaderMaterial({
             uniforms: {
                 time: { value: 0 }, // Time uniform for animation
                 color1: { value: new THREE.Color(0xFFD700) }, // Gold color
@@ -96,8 +96,8 @@
             opacity: 0.99, // Less transparent, more solid plastic look
         });
 
-        const heartMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xCC0000, // Pink color (Hot Pink)
+        const yellowMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xFDE910, // Pink color (Hot Pink)
             metalness: 0.2, // Lower metalness for a more plastic feel
             roughness: 0.6, // Increase roughness for a more matte appearance
             clearcoat: 0.1, // Low clearcoat for minimal shine
@@ -153,7 +153,7 @@
         const heartGeometry = new THREE.ExtrudeGeometry(heartShape, extrudeSettings);
 
         // Create heart mesh using the gradient material
-        const heart = new THREE.Mesh(heartGeometry, gradientMaterial);
+        const heart = new THREE.Mesh(heartGeometry, bigHeartMaterial);
         heart.scale.set(0.5, 0.5, 0.5); // Scale down the heart
         heart.position.set(0, 0.34, 0.8); // Position it in front of the body
         heart.rotation.y = Math.PI; // Rotate the heart to face forward
@@ -226,27 +226,29 @@
             bearGroup.add(xEye);
 
             // Create the O eye
-            // const oEyeGeometry = new THREE.TextGeometry('O', {
-            //         font: font,
-            //         size: 0.2, // Size of the O
-            //         height: 0.05, // Thickness of the O
-            //     });
+            const oEyeGeometry = new THREE.TextGeometry('O', {
+                   font: font,
+                    size: 0.2, // Size of the O
+                    height: 0.05, // Thickness of the O
+                });
 
-            // const oEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
-            // const oEye = new THREE.Mesh(oEyeGeometry, oEyeMaterial);
-            // oEye.position.set(0.3, 1, 0.5); // Position on the head
-            // bearGroup.add(oEye);
+            const oEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
+            const oEye = new THREE.Mesh(oEyeGeometry, oEyeMaterial);
+            oEye.position.set(0.18, 1, 0.53); // Position on the head
+            oEye.rotation.y = THREE.MathUtils.degToRad(32);
+
+            bearGroup.add(oEye);
         });
 
         // Create the O eye
-        const oEyeGeometry = new THREE.SphereGeometry(0.1, 32, 32); // Smaller sphere for O eye
-        const oEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
-        const oEye = new THREE.Mesh(oEyeGeometry, oEyeMaterial, gradientMaterial);
-        oEye.position.set(0.2, 1.1, 0.54); // Position on the head
-        bearGroup.add(oEye);
+        // const oEyeGeometry = new THREE.SphereGeometry(0.1, 32, 32); // Smaller sphere for O eye
+        // const oEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
+        // const oEye = new THREE.Mesh(oEyeGeometry, oEyeMaterial, gradientMaterial);
+        // oEye.position.set(0.2, 1.1, 0.54); // Position on the head
+        // bearGroup.add(oEye);
 
      // Create rounded buttocks
-        const buttockGeometry = new THREE.SphereGeometry(0.4, 32, 32); // Geometry for the buttocks
+        const buttockGeometry = new THREE.SphereGeometry(0.44, 32, 32); // Geometry for the buttocks
         const leftButtock = new THREE.Mesh(buttockGeometry, gummyMaterial);
         leftButtock.position.set(-0.15, -.45, -0.4); // Position the left buttock behind the body
         bearGroup.add(leftButtock);
@@ -257,8 +259,8 @@
 
         // Create round bear tail
         const tailGeometry = new THREE.SphereGeometry(0.18, 32, 32); // Smaller sphere for the tail
-        const tail = new THREE.Mesh(tailGeometry, gummyMaterial);
-        tail.position.set(0, -.35, -0.75); // Position the tail at the back of the body
+        const tail = new THREE.Mesh(tailGeometry, yellowMaterial);
+        tail.position.set(0, -.35, -0.8); // Position the tail at the back of the body
         bearGroup.add(tail);
 
         // Add bear group to the scene
@@ -268,7 +270,7 @@
         function animate() {
             requestAnimationFrame(animate);
             bearGroup.rotation.y += 0.02; // Rotate the bear group around the y-axis
-            gradientMaterial.uniforms.time.value += 0.02;
+            bigHeartMaterial.uniforms.time.value += 0.02;
             renderer.render(scene, camera);
         }
 
