@@ -13,27 +13,36 @@
             height: 100vh;
             width: 100vw;
             overflow: hidden;
-            background: radial-gradient(circle at 50% 50%, rgb(255, 255, 255),  rgba(255, 1, 128, 0.751));
-            background-size: 200% 200%;
+            background: radial-gradient(circle at 50% 50%, #ffffff, #3be4e4, #ff00cc, #FFFF00); /* Contrasting colors: blue, cyan, orange, yellow */
+            background-size: 100% 100%;
             background-repeat: no-repeat;
-            animation: heartTunnel 1s infinite linear;
+            animation: waterEffect 5s infinite ease-in-out;
         }
 
-        /* Keyframes for heart tunnel-like animation */
-        @keyframes heartTunnel {
+        /* Keyframes for dynamic water-like gradient effect */
+        @keyframes waterEffect {
             0% {
+                background-size: 100% 100%;
+                background-position: 0% 50%;
+            }
+            25% {
                 background-size: 150% 150%;
-                background-position: center;
+                background-position: 50% 100%;
             }
             50% {
-                background-size: 100% 100%;
-                background-position: center;
+                background-size: 200% 200%;
+                background-position: 100% 50%;
+            }
+            75% {
+                background-size: 150% 150%;
+                background-position: 50% 0%;
             }
             100% {
-                background-size: 150% 150%;
-                background-position: center;
+                background-size: 100% 100%;
+                background-position: 0% 50%;
             }
         }
+
     </style>
 </head>
 <body>
@@ -83,7 +92,7 @@
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
         scene.add(ambientLight);
 
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 10);
         directionalLight.position.set(5, 5, 5);
         scene.add(directionalLight);
 
