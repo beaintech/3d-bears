@@ -230,8 +230,8 @@
         // Add the heart to the bear group
         bearGroup.add(smallHeart);
 
-               // Load the font for the X eye
-               const loader = new THREE.FontLoader();
+        // Load the font for the X eye
+        const loader = new THREE.FontLoader();
         loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
             // Create the X eye
             const xEyeGeometry = new THREE.TextGeometry('O', {
@@ -240,26 +240,26 @@
                 height: 0.05, // Thickness of the X
             });
 
-            const xEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
-            const xEye = new THREE.Mesh(xEyeGeometry, xEyeMaterial);
-            xEye.position.set(-0.34, 0.95, 0.5); // Position on the head
-            xEye.rotation.x = THREE.MathUtils.degToRad(-5);
-            xEye.rotation.y = THREE.MathUtils.degToRad(-15);
-            bearGroup.add(xEye);
+        const xEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
+        const xEye = new THREE.Mesh(xEyeGeometry, xEyeMaterial);
+        xEye.position.set(-0.34, 0.95, 0.5); // Position on the head
+        xEye.rotation.x = THREE.MathUtils.degToRad(-5);
+        xEye.rotation.y = THREE.MathUtils.degToRad(-15);
+         bearGroup.add(xEye);
 
-            // Create the O eye
-            const oEyeGeometry = new THREE.TextGeometry('+', {
-                   font: font,
-                    size: 0.2, // Size of the O
-                    height: 0.05, // Thickness of the O
-                });
+        // Create the O eye
+        const oEyeGeometry = new THREE.TextGeometry('+', {
+            font: font,
+            size: 0.2, // Size of the O
+            height: 0.05, // Thickness of the O
+        });
 
-            const oEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
-            const oEye = new THREE.Mesh(oEyeGeometry, oEyeMaterial);
-            oEye.position.set(0.18, 0.98, 0.55); // Position on the head
-            oEye.rotation.y = THREE.MathUtils.degToRad(32);
+        const oEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
+        const oEye = new THREE.Mesh(oEyeGeometry, oEyeMaterial);
+        oEye.position.set(0.18, 0.98, 0.55); // Position on the head
+        oEye.rotation.y = THREE.MathUtils.degToRad(32);
 
-            bearGroup.add(oEye);
+        bearGroup.add(oEye);
         });
 
         // Add bear group to the scene

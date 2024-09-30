@@ -188,6 +188,32 @@
         tail.position.set(0, -0.35, -0.75);
         bearGroup.add(tail);
 
+        // Custom material for eyes
+        const rightEyeMaterial = new THREE.MeshStandardMaterial({ color: 0xFF69B4, metalness: 1, roughness: 0.44 });
+        const leftEyeMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFF00, metalness: 1, roughness: 0.44 });
+
+        // Create diamond shape for the eyes
+        const diamondShape = new THREE.Shape();
+        diamondShape.moveTo(0, 0.15);   // Top point
+        diamondShape.lineTo(0.1, 0);   // Right point
+        diamondShape.lineTo(0, -0.15);  // Bottom point
+        diamondShape.lineTo(-0.1, 0);  // Left point
+        diamondShape.lineTo(0, 0.15);   // Back to top
+
+        const extrudeSettings = { depth: 0.07, bevelEnabled: false }; // Thinner depth
+        const diamondGeometry = new THREE.ExtrudeGeometry(diamondShape, extrudeSettings);
+
+         // Position diamond eyes
+         const leftEye = new THREE.Mesh(diamondGeometry, rightEyeMaterial);
+        leftEye.position.set(-0.25, 1, 0.5); // Adjust position on bear's head
+        leftEye.rotation.y = Math.PI / 30;     // Slight rotation to fit face shape
+        bearGroup.add(leftEye);
+
+        const rightEye = new THREE.Mesh(diamondGeometry, leftEyeMaterial);
+        rightEye.position.set(0.25, 1, 0.5); // Adjust position on bear's head
+        rightEye.rotation.y = Math.PI / 30;   // Slight rotation to fit face shape
+        bearGroup.add(rightEye);
+
         // Add bear group to the scene
         scene.add(bearGroup);
 
