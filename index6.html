@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Gummy Bear with Dynamic Gradient</title>
+    <title>3D Diamond</title>
     <link rel="icon" href="./favicon.ico" />
     <!-- Load Three.js from a CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -13,7 +13,7 @@
             height: 100vh;
             width: 100vw;
             overflow: hidden;
-            background: radial-gradient(circle at 50% 50%, #ffffff, #3be4e4, #ff00cc, #FFFF00); /* Contrasting colors: blue, cyan, orange, yellow */
+            background: radial-gradient(circle at 50% 50%, #ffffff, #70ebeb, #f097de, #efef9f); /* Contrasting colors: blue, cyan, orange, yellow */
             background-size: 100% 100%;
             background-repeat: no-repeat;
             animation: waterEffect 5s infinite ease-in-out;
@@ -56,27 +56,29 @@
 
     <script id="fragmentShader" type="x-shader/x-fragment">
         uniform float time;
+        uniform float opacity; // Add opacity uniform
         varying vec2 vUv;
-
+    
         void main() {
             // Dynamic water-like gradient effect
             vec2 p = vUv * 2.0 - vec2(1.0); // Normalize UV coordinates to [-1, 1]
             float len = length(p); // Get the length of the vector (distance from center)
             float angle = atan(p.y, p.x); // Calculate the angle in polar coordinates
-
+    
             // Create a time-based oscillating value for smooth gradient transitions
             float wave = sin(len * 10.0 - time * 3.0) * 1.0 + 0.5;
-
+    
             // Color gradient based on the angle and distance from the center
             vec3 color1 = vec3(1.0, 0.3, 0.5); // Pinkish
             vec3 color2 = vec3(0.3, 0.6, 1.0); // Blueish
             vec3 color3 = vec3(1.0, 0.0, 0.8); // Magenta
-
+    
             // Mix the colors based on wave and angle for a dynamic effect
             vec3 color = mix(color1, color2, wave);
             color = mix(color, color3, sin(angle + time) * 0.5 + 0.5);
-
-            gl_FragColor = vec4(color, 1.0);
+    
+            // Set the fragment color with opacity
+            gl_FragColor = vec4(color, opacity); // Use the opacity uniform for transparency
         }
     </script>
 
@@ -88,6 +90,16 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
+        const heartMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xCC0000, // Pink color (Hot Pink)
+            metalness: 0.2, // Lower metalness for a more plastic feel
+            roughness: 0.6, // Increase roughness for a more matte appearance
+            clearcoat: 0.1, // Low clearcoat for minimal shine
+            clearcoatRoughness: 0.8, // Higher clearcoat roughness for a matte finish
+            transparent: true,
+            opacity: 0.99, // Less transparent, more solid plastic look
+        });
+
         // Add lighting
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
         scene.add(ambientLight);
@@ -98,21 +110,33 @@
 
         // Custom shader material with animated water-like gradient
         const shaderMaterial = new THREE.ShaderMaterial({
-            uniforms: {
-                time: { value: 0.0 } // Time uniform to animate the shader
-            },
-            vertexShader: document.getElementById('vertexShader').textContent,
-            fragmentShader: document.getElementById('fragmentShader').textContent,
-            transparent: true,  // Enable transparency
-    opacity: 0.1        // Adjust the opacity (lower value for more transparency)
-        });
+        uniforms: {
+            time: { value: 0.0 }, // Time uniform to animate the shader
+            opacity: { value: 0.8 } // Opacity uniform (set to 0.6 for 60% transparency)
+        },
+        vertexShader: document.getElementById('vertexShader').textContent,
+        fragmentShader: document.getElementById('fragmentShader').textContent,
+        transparent: true // Enable transparency in the material
+    });
+
+        const bodyMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+            time: { value: 0.0 }, // Time uniform to animate the shader
+            opacity: { value: 0.6 } // Opacity uniform (set to 0.6 for 60% transparency)
+        },
+        vertexShader: document.getElementById('vertexShader').textContent,
+        fragmentShader: document.getElementById('fragmentShader').textContent,
+        transparent: true, // Enable transparency in the material
+        depthWrite: false  // Disable depth writing to ensure proper rendering
+    });
+
 
         // Create a group to hold all bear parts
         const bearGroup = new THREE.Group();
 
         // Bear body with shader material
         const bodyGeometry = new THREE.SphereGeometry(1, 32, 32);
-        const body = new THREE.Mesh(bodyGeometry, shaderMaterial);
+        const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
         body.scale.set(0.85, 0.85, 0.8); // Shorter body
         body.position.y = -0.2;
         bearGroup.add(body);
@@ -179,19 +203,27 @@
         const buttockGeometry = new THREE.SphereGeometry(0.44, 32, 32);
         const leftButtock = new THREE.Mesh(buttockGeometry, shaderMaterial);
         leftButtock.position.set(-0.15, -0.45, -0.4);
-        bearGroup.add(leftButtock);
+        // bearGroup.add(leftButtock);
 
         const rightButtock = new THREE.Mesh(buttockGeometry, shaderMaterial);
         rightButtock.position.set(0.15, -0.45, -0.4);
-        bearGroup.add(rightButtock);
+        // bearGroup.add(rightButtock);
 
         const tailGeometry = new THREE.SphereGeometry(0.18, 32, 32);
         const tail = new THREE.Mesh(tailGeometry, shaderMaterial);
         tail.position.set(0, -0.35, -0.75);
         bearGroup.add(tail);
 
+        // Create a 2D heart shape
+        const heartShape = new THREE.Shape();
+        heartShape.moveTo(0, 0);
+        heartShape.bezierCurveTo(0, -0.3, -0.6, -0.3, -0.6, 0);
+        heartShape.bezierCurveTo(-0.6, 0.3, 0, 0.6, 0, 1);
+        heartShape.bezierCurveTo(0, 0.6, 0.6, 0.3, 0.6, 0);
+        heartShape.bezierCurveTo(0.6, -0.3, 0, -0.3, 0, 0);
+
         // Custom material for eyes
-        const rightEyeMaterial = new THREE.MeshStandardMaterial({ color: 0xFF69B4, metalness: 1, roughness: 0.44 });
+        const rightEyeMaterial = new THREE.MeshStandardMaterial({ color: 0x87CEEB, metalness: 1, roughness: 0.44 });
         const leftEyeMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFF00, metalness: 1, roughness: 0.44 });
 
         // Create diamond shape for the eyes
@@ -215,6 +247,66 @@
         rightEye.position.set(0.25, 1, 0.5); // Adjust position on bear's head
         rightEye.rotation.y = Math.PI / 30;   // Slight rotation to fit face shape
         bearGroup.add(rightEye);
+
+        // Extrude the heart shape to give it 3D depth
+        const extrudeHeartSettings = { depth: 0.4, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 0.1, bevelThickness: 0.1 };
+        const heartGeometry = new THREE.ExtrudeGeometry(heartShape, extrudeHeartSettings);
+
+        // Create heart mesh using the gradient material
+        const heart = new THREE.Mesh(heartGeometry, heartMaterial);
+        heart.scale.set(0.5, 0.5, 0.5); // Scale down the heart
+        heart.position.set(0, 0, 0); // Position it in front of the body
+        heart.rotation.y = Math.PI; // Rotate the heart to face forward
+        heart.rotation.x = Math.PI; // Flip the heart upside down
+
+        // Add the heart to the bearGroup, in front of the body
+        // bearGroup.add(heart);
+
+        // Create a classic 6-corner diamond shape
+        const largeDiamondShape = new THREE.Shape();
+        largeDiamondShape.moveTo(0, 0.6);   // Top point
+        largeDiamondShape.lineTo(0.3, 0.3); // Upper-right corner
+        largeDiamondShape.lineTo(0.6, 0);   // Right point
+        largeDiamondShape.lineTo(0.3, -0.3); // Lower-right corner
+        largeDiamondShape.lineTo(0, -0.6);  // Bottom point
+        largeDiamondShape.lineTo(-0.3, -0.3); // Lower-left corner
+        largeDiamondShape.lineTo(-0.6, 0);  // Left point
+        largeDiamondShape.lineTo(-0.3, 0.3); // Upper-left corner
+        largeDiamondShape.lineTo(0, 0.6);   // Back to top
+
+        // Extrusion settings for the diamond
+        const extrudeLargeDiamondSettings = { 
+            depth: 0.4,           // Thicker depth for more volume
+            bevelEnabled: true,    // Add bevel for a more 3D appearance
+            bevelSegments: 2, 
+            steps: 2, 
+            bevelSize: 0.1, 
+            bevelThickness: 0.1 
+        };
+
+    // Create geometry for the extruded diamond
+    const largeDiamondGeometry = new THREE.ExtrudeGeometry(largeDiamondShape, extrudeLargeDiamondSettings);
+
+    // Create material for the diamond with a shiny and transparent look
+    const largeDiamondMaterial = new THREE.MeshPhysicalMaterial({
+        color: 0xFF69B4,       // Light blue (sky blue) color
+        metalness: 0.6,        // More metalness for a shiny, reflective surface
+        roughness: 0.2,        // Less roughness for a glossy appearance
+        clearcoat: 0.2,        // Clearcoat for added shine
+        clearcoatRoughness: 0.1, // Clearcoat for more smoothness
+        transparent: true,     // Enable transparency
+        opacity: 0.8,          // Adjust the opacity for a translucent effect
+        depthWrite: false      // Ensure correct rendering through transparency
+    });
+
+    // Create the large diamond mesh
+    const largeDiamond = new THREE.Mesh(largeDiamondGeometry, largeDiamondMaterial);
+    largeDiamond.scale.set(0.5, 0.5, 0.5); // Scale the diamond to match the size of the heart
+    largeDiamond.position.set(0, 0, 0); // Position the diamond in the center of the bear's body
+
+    // Add the large diamond to the bear group
+    bearGroup.add(largeDiamond);
+
 
         // Add bear group to the scene
         scene.add(bearGroup);
