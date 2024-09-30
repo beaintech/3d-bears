@@ -236,7 +236,7 @@
             // Create the X eye
             const xEyeGeometry = new THREE.TextGeometry('O', {
                 font: font,
-                size: 0.2, // Size of the X
+                size: 0.18, // Size of the X
                 height: 0.05, // Thickness of the X
             });
 
@@ -256,7 +256,7 @@
 
             const oEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
             const oEye = new THREE.Mesh(oEyeGeometry, oEyeMaterial);
-            oEye.position.set(0.18, .95, 0.55); // Position on the head
+            oEye.position.set(0.18, 0.98, 0.55); // Position on the head
             oEye.rotation.y = THREE.MathUtils.degToRad(32);
 
             bearGroup.add(oEye);
