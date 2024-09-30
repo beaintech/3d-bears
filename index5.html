@@ -16,21 +16,21 @@
             background: radial-gradient(circle at 50% 50%, rgb(2, 234, 6), rgba(252, 248, 1, 0.99), rgb(141, 2, 255), rgb(255, 120, 2),rgb(255, 2, 133));
             background-size: 200% 200%;
             background-repeat: no-repeat;
-            animation: heartTunnel 2s infinite linear;
+            animation: heartTunnel 3s infinite linear;
         }
 
         /* Keyframes for heart tunnel-like animation */
         @keyframes heartTunnel {
             0% {
-                background-size: 150% 150%;
-                background-position: center;
-            }
-            50% {
                 background-size: 100% 100%;
                 background-position: center;
             }
-            100% {
+            50% {
                 background-size: 150% 150%;
+                background-position: center;
+            }
+            100% {
+                background-size: 200% 200%;
                 background-position: center;
             }
         }
@@ -218,17 +218,49 @@
 
         // Create the heart mesh
         const smallHeart = new THREE.Mesh(heartGeometry, blackMaterial);
-        smallHeart.scale.set(0.12, 0.12, 0.12); // Scale the heart down to be small
+        smallHeart.scale.set(0.1, 0.1, 0.1); // Scale the heart down to be small
 
         // Rotate the heart by 30 degrees (in radians) and position it on the left side of the bear's face
         smallHeart.rotation.z = THREE.MathUtils.degToRad(210); // Rotate 30 degrees
         smallHeart.rotation.x = THREE.MathUtils.degToRad(5);
         smallHeart.rotation.y = THREE.MathUtils.degToRad(-45);
 
-        smallHeart.position.set(-0.38, 1, 0.45); // Position it on the pink side of the face
+        smallHeart.position.set(-0.4, 0.9, 0.45); // Position it on the pink side of the face
 
         // Add the heart to the bear group
         bearGroup.add(smallHeart);
+
+               // Load the font for the X eye
+               const loader = new THREE.FontLoader();
+        loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
+            // Create the X eye
+            const xEyeGeometry = new THREE.TextGeometry('O', {
+                font: font,
+                size: 0.2, // Size of the X
+                height: 0.05, // Thickness of the X
+            });
+
+            const xEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
+            const xEye = new THREE.Mesh(xEyeGeometry, xEyeMaterial);
+            xEye.position.set(-0.34, 0.95, 0.5); // Position on the head
+            xEye.rotation.x = THREE.MathUtils.degToRad(-5);
+            xEye.rotation.y = THREE.MathUtils.degToRad(-15);
+            bearGroup.add(xEye);
+
+            // Create the O eye
+            const oEyeGeometry = new THREE.TextGeometry('+', {
+                   font: font,
+                    size: 0.2, // Size of the O
+                    height: 0.05, // Thickness of the O
+                });
+
+            const oEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
+            const oEye = new THREE.Mesh(oEyeGeometry, oEyeMaterial);
+            oEye.position.set(0.18, .95, 0.55); // Position on the head
+            oEye.rotation.y = THREE.MathUtils.degToRad(32);
+
+            bearGroup.add(oEye);
+        });
 
         // Add bear group to the scene
         scene.add(bearGroup);
