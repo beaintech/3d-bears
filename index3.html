@@ -246,7 +246,7 @@
         bearGroup.add(oEye);
 
      // Create rounded buttocks
-        const buttockGeometry = new THREE.SphereGeometry(0.4, 32, 32); // Geometry for the buttocks
+        const buttockGeometry = new THREE.SphereGeometry(0.44, 32, 32); // Geometry for the buttocks
         const leftButtock = new THREE.Mesh(buttockGeometry, gummyMaterial);
         leftButtock.position.set(-0.15, -.45, -0.4); // Position the left buttock behind the body
         bearGroup.add(leftButtock);
@@ -257,8 +257,8 @@
 
         // Create round bear tail
         const tailGeometry = new THREE.SphereGeometry(0.18, 32, 32); // Smaller sphere for the tail
-        const tail = new THREE.Mesh(tailGeometry, gummyMaterial);
-        tail.position.set(0, -.35, -0.75); // Position the tail at the back of the body
+        const tail = new THREE.Mesh(tailGeometry, heartMaterial);
+        tail.position.set(0, -.35, -0.8); // Position the tail at the back of the body
         bearGroup.add(tail);
 
         // Add bear group to the scene

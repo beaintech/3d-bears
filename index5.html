@@ -167,9 +167,9 @@
         rightLeg.castShadow = false;
 
         // Create rounded buttocks
-        const buttockGeometry = new THREE.SphereGeometry(0.4, 32, 32); // Geometry for the buttocks
+        const buttockGeometry = new THREE.SphereGeometry(0.44, 32, 32); // Geometry for the buttocks
         const leftButtock = new THREE.Mesh(buttockGeometry, hotPinkMaterial);
-        leftButtock.position.set(-0.15, -.45, -0.4); // Position the left buttock behind the body
+        leftButtock.position.set(-0.2, -.45, -0.4); // Position the left buttock behind the body
         bearGroup.add(leftButtock);
 
         const rightButtock = new THREE.Mesh(buttockGeometry, blueMaterial);
@@ -179,8 +179,37 @@
         // Create round bear tail
         const tailGeometry = new THREE.SphereGeometry(0.18, 32, 32); // Smaller sphere for the tail
         const tail = new THREE.Mesh(tailGeometry, splitColorMatteMaterial);
-        tail.position.set(0, -.35, -0.75); // Position the tail at the back of the body
+        tail.position.set(0, -.35, -0.8); // Position the tail at the back of the body
         bearGroup.add(tail);
+
+        // Create a 2D heart shape
+        const heartShape = new THREE.Shape();
+        heartShape.moveTo(0, 0);
+        heartShape.bezierCurveTo(0, -0.3, -0.6, -0.3, -0.6, 0);
+        heartShape.bezierCurveTo(-0.6, 0.3, 0, 0.6, 0, 1);
+        heartShape.bezierCurveTo(0, 0.6, 0.6, 0.3, 0.6, 0);
+        heartShape.bezierCurveTo(0.6, -0.3, 0, -0.3, 0, 0);
+
+        // Extrude the heart shape to give it 3D depth
+        const extrudeSettings = { depth: 0.05, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 0.05, bevelThickness: 0.05 };
+        const heartGeometry = new THREE.ExtrudeGeometry(heartShape, extrudeSettings);
+
+        // Create the black material for the heart
+        const blackMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+
+        // Create the heart mesh
+        const smallHeart = new THREE.Mesh(heartGeometry, blackMaterial);
+        smallHeart.scale.set(0.12, 0.12, 0.12); // Scale the heart down to be small
+
+        // Rotate the heart by 30 degrees (in radians) and position it on the left side of the bear's face
+        smallHeart.rotation.z = THREE.MathUtils.degToRad(210); // Rotate 30 degrees
+        smallHeart.rotation.x = THREE.MathUtils.degToRad(5);
+        smallHeart.rotation.y = THREE.MathUtils.degToRad(-45);
+
+        smallHeart.position.set(-0.38, 1, 0.45); // Position it on the pink side of the face
+
+        // Add the heart to the bear group
+        bearGroup.add(smallHeart);
 
         // Add bear group to the scene
         scene.add(bearGroup);
